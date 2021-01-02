@@ -1,6 +1,9 @@
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:custom_switch/custom_switch.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:infirmaryweb/AppBar.dart';
 import 'package:infirmaryweb/Drawer.dart';
 
@@ -72,37 +75,43 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
+      
       drawer: appDrawer(context),
       appBar: appBar(),
-      body: LayoutBuilder(
-              builder: (context,constraints){
-              if(constraints.maxWidth>=800){
-              return SingleChildScrollView(
-                              child: Container(
-                  width: constraints.biggest.width,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: page_view(MediaQuery.of(context).size.width*0.25,MediaQuery.of(context).size.width*0.01),
-                  )
-                ),
-              );
-              }
-              else if(constraints.maxWidth<800)
-              {
-              return SingleChildScrollView(
-                              child: Container(
-                  width:constraints.biggest.width,
-                                    child: Column(
-                    //mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.end,
+      body: Container(
+         decoration: BoxDecoration(
+        ),
+        child: LayoutBuilder(
+                builder: (context,constraints){
+                if(constraints.maxWidth>=800){
+                return SingleChildScrollView(
+                                child: Container(
+                    width: constraints.biggest.width,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: page_view(MediaQuery.of(context).size.width*0.25,MediaQuery.of(context).size.width*0.01),
+                    )
+                  ),
+                );
+                }
+                else if(constraints.maxWidth<800)
+                {
+                return SingleChildScrollView(
+                                child: Container(
+                                
+                    width:constraints.biggest.width,
+                                      child: Column(
+                      //mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      
+                      children: page_view(constraints.biggest.width-20, MediaQuery.of(context).size.width*0.03),
+                    )
                     
-                    children: page_view(constraints.biggest.width, MediaQuery.of(context).size.width*0.03),
-                  )
-                  
-                ),
-              );
-              }
-              }
+                  ),
+                );
+                }
+                }
+        ),
       ),
     );
   }
@@ -116,11 +125,14 @@ Container Doctor_information(
         Row(
           children: [
             Container(
-              margin: EdgeInsets.all(10),
-              child: CircleAvatar(
-                  //   child: Image.network(photo)
-                  ),
-            ),
+              margin: EdgeInsets.only(right: 30, left: 20, bottom: 5, top:10),
+             child: CircleAvatar(
+                  radius: 30,
+                    backgroundImage: NetworkImage(photo)
+                  
+                    ),
+              ),
+        
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -130,7 +142,7 @@ Container Doctor_information(
                       style: Theme.of(context).textTheme.bodyText1.merge(TextStyle(fontSize: text_size))
                     ),
                     Text(introduction,
-                      style: Theme.of(context).textTheme.bodyText1.merge(TextStyle(fontSize: text_size))
+                      style: Theme.of(context).textTheme.bodyText2.merge(TextStyle(fontSize: text_size))
                     ),
                   ],
                 ),
@@ -164,9 +176,10 @@ right_part(this.width,this.text_size);
 }
 
 class _right_partState extends State<right_part> {
-
+    
   @override
   Widget build(BuildContext context) {
+ 
     return Container(
   //  width: widget.width,
     
@@ -175,63 +188,96 @@ class _right_partState extends State<right_part> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-                  width: widget.width,
-                  child: Column(
-                    children: [
-                      Card(
-                        color: Colors.black,
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color:Colors.black,
+                    borderRadius: BorderRadius.circular(10)
+                    
+                  ),
+                    
+                    margin: EdgeInsets.only(top: 10),
+                
+                    width: widget.width,
+                    child: Column(
+                      children: [
+                        Card(
+                          color: Colors.black,
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Status :' + (status ? 'OPEN' : 'CLOSE'),
-                                    style: Theme.of(context).textTheme.headline2.merge(TextStyle(fontSize: widget.text_size)))
-                                    //Theme.of(context).textTheme.bodyText1)
-                                    
-                                   /* TextStyle(
-                                        color: Colors.white, fontSize: widget.text_size),
-                                  ),*/
-                                ],
-                              ),
-                              CustomSwitch(
-                                activeColor: Colors.orange,
-                                value: status,
-                                onChanged: (value) {
-                                  setState(() {
-                                    status = value;
-                                  });
-                                  var f = userStream.docs[0].reference
-                                     .set({"isOpen": status});
-                              
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Card(
-                              color: Colors.blue,
-                              child: Column(
-                                children: [
-                                 Container(
-                                      //margin: EdgeInsets.all(10),
-                                      child: Container(
-                                        width: widget.width,
-                                        height: 50,
-                                        color: Colors.black,
-                                        child: Center(
-                                          child: Text("Doctor's List",
-                                            style: Theme.of(context).textTheme.headline1.merge(TextStyle(fontSize: widget.text_size))
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                              Container(
+                                          width: widget.width,
+                                          height: 50,
+                                          color: Colors.cyan[900],
+                                          child: Center(
+                                            child: Text(
+                                              
+                                         'Status :' + (status ? 'OPEN' : 'CLOSE'),
+                                        style: Theme.of(context).textTheme.headline2.merge(TextStyle(fontSize: widget.text_size))),
                                           ),
                                         ),
-                                      )),
-                                      Container(
+                               /* Row(
+                            
+                                  children: [
+                                    Container(
+                                      width: widget.width,
+                                      color: Colors.cyan,
+                                      child: Text(
+                                         'Status :' + (status ? 'OPEN' : 'CLOSE'),
+                                        style: Theme.of(context).textTheme.headline2.merge(TextStyle(fontSize: widget.text_size))),
+                                    )
+                                      //Theme.of(context).textTheme.bodyText1)
+                                      
+                                     /* TextStyle(
+                                          color: Colors.white, fontSize: widget.text_size),
+                                    ),*/
+                                  ],
+                                ),*/
+                                Container(
+                                  color: Colors.cyan[200],
+
+                                  width: widget.width,
+                                  height: 60,
+                      
+                                  child: Center(
+                                    child: CustomSwitch(
+                                      activeColor: Colors.orange,
+                                      value: status,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          status = value;
+                                        });
+                                        var f = userStream.docs[0].reference
+                                           .set({"isOpen": status});
+                                    
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          
+                        ),
+                        SizedBox(
+                          height: 30
+                        ),
+                        Card(
+                                color:Colors.cyan[200],
+                                child: Column(
+                                  children: [
+                                   Container(
+                                        //margin: EdgeInsets.all(10),
+                                        child: Container(
+                                          width: widget.width,
+                                          height: 50,
+                                          color:Colors.cyan[900],
+                                          child: Center(
+                                            child: Text("Doctor's List",
+                                                style: Theme.of(context).textTheme.headline2.merge(TextStyle(fontSize: widget.text_size))
+                                            ),
+                                          ),
+                                        )),
+                                        Container(
 child:   StreamBuilder(
   
     
@@ -261,67 +307,15 @@ child:   StreamBuilder(
         return  Container(
           child: ListView.builder(
             controller: scroll_controller ,
-                                                itemCount: s.data.docs.length,
+                                                  itemCount: s.data.docs.length,
     
       
     
-                                                shrinkWrap: true,
+                                                  shrinkWrap: true,
     
       
     
-                                                itemBuilder: (context, count) {
-    
-      
-    
-                                                  
-    
-      
-    
-                                                  
-    
-      
-    
-                                                  return Doctor_information(
-    
-      
-    
-                                                  
-    
-      
-    
-                                                      s.data.docs[count].data()['Name'],
-    
-      
-    
-                                                      s.data.docs[count].data()['Number'],
-    
-      
-    
-                                                      s.data.docs[count].data()['ImgUrl'],
-    
-      
-    
-                                                      s.data.docs[count].data()['About'],
-    
-      
-    
-                                                      context,
-    
-      
-    
-                                                      widget.text_size
-    
-      
-    
-                                                      );
-    
-      
-    
-                                                 
-    
-      
-    
-                                                  
+                                                  itemBuilder: (context, count) {
     
       
     
@@ -329,7 +323,59 @@ child:   StreamBuilder(
     
       
     
-                                                },
+                                                    
+    
+      
+    
+                                                    return Doctor_information(
+    
+      
+    
+                                                    
+    
+      
+    
+                                                        s.data.docs[count].data()['Name'],
+    
+      
+    
+                                                        s.data.docs[count].data()['Number'],
+    
+      
+    
+                                                        s.data.docs[count].data()['ImgUrl'],
+    
+      
+    
+                                                        s.data.docs[count].data()['About'],
+    
+      
+    
+                                                        context,
+    
+      
+    
+                                                        widget.text_size
+    
+      
+    
+                                                        );
+    
+      
+    
+                                                   
+    
+      
+    
+                                                    
+    
+      
+    
+                                                      
+    
+      
+    
+                                                  },
     
       
     
@@ -373,158 +419,199 @@ child:   StreamBuilder(
 ),
 
 
-                          
-                                
-                                ],
-                              ),
-                            ),
-                        
-                          
-                      Container(
-                        child: Column(children: [
-                         StreamBuilder(
-                            stream: Firestore.instance
-                                .collection("Appointments")
-                                .snapshots(),
-                            builder: (c, snap) {
-                              if(snap.hasData){
-                              var live_count = 0;
-                              var hold_case = 0;
-                              var resolve_case = 0;
-                              int action;
-                              for (var i in snap.data.docs) {
-                                action = i.data()['action'];
-                                if (action == 1) {
-                                  live_count++;
-                                } else if (action == 0) {
-                                  hold_case++;
-                                } else {
-                                  resolve_case++;
-                                }
-                              }
                             
-
-                              return Card(
-                                color: Colors.orange,
-                                child: Column(
-                                  children: [
-                                    Container(
-                                    
-                                      child: Container(
-
-                                        width: widget.width,
-                                        height: 50,
-                                        color: Colors.black,
-                                        child: Center(
-                                          child: Text("Cases Status",
-                                          style: Theme.of(context).textTheme.headline1.merge(TextStyle(fontSize: widget.text_size))
-                                          
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Container(
-                                            child: Text(
-                                                "Live cases                     ",
-                                                  style: Theme.of(context).textTheme.bodyText1.merge(TextStyle(fontSize: widget.text_size)),
-                                                )),
-                                        Card(
-                                          color: Colors.indigoAccent,
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 20),
-                                            child: Text(
-                                              "$live_count",
-                                              style: Theme.of(context).textTheme.headline1.merge(TextStyle(fontSize: widget.text_size))
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Container(
-                                            child: Text(
-                                                "Hold cases                    ",
-                                                 style: Theme.of(context).textTheme.bodyText1.merge(TextStyle(fontSize: widget.text_size))
-                                                )),
-                                        Card(
-                                          color: Colors.indigoAccent,
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 20),
-                                            child: Text(
-                                              "$hold_case",
-                                              style: Theme.of(context).textTheme.headline1.merge(TextStyle(fontSize: widget.text_size)),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Container(
-                                            child: Text(
-                                                "Resolved cases              ",
-                                                  style: Theme.of(context).textTheme.bodyText1.merge(TextStyle(fontSize: widget.text_size))
-                                                )),
-                                        Card(
-                                          color: Colors.indigoAccent,
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 20),
-                                            child: Text(
-                                              "$resolve_case",
-                                              style: Theme.of(context).textTheme.headline1.merge(TextStyle(fontSize: widget.text_size)),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                  
                                   ],
                                 ),
-                              );
-                              }
-                              else{
-                                return Container(
-                                
-                                );
-                              }
-                              
-                            },
-                          )
-                        ]),
-                      ),
-
-                      Card(
-                        color: Colors.blue,
-                        child: Row(
-                          children: [
-                            Container(child: Text("Live Traffic:",
-                            style: Theme.of(context).textTheme.bodyText1.merge(TextStyle(fontSize: widget.text_size)),
-                            ),
-                            padding: EdgeInsets.all(10),),
-                            Card(
-                              color: Colors.indigoAccent,
-                              margin: EdgeInsets.all(20),
-                              child: Container(child:  Text(
-                                              "$traffic",
-                                              style: Theme.of(context).textTheme.headline1.merge(TextStyle(fontSize: widget.text_size)),
-                                            ),
-                              padding: EdgeInsets.symmetric(
-                                                horizontal: widget.text_size),
                               ),
+                              SizedBox(
+                                          height: 30
+                                      
+                                        ),
+                          
                             
-                              )
+                        Container(
+                          child: Column(children: [
+                           StreamBuilder(
+                              stream: Firestore.instance
+                                  .collection("Appointments")
+                                  .snapshots(),
+                              builder: (c, snap) {
+                                if(snap.hasData){
+                                var live_count = 0;
+                                var hold_case = 0;
+                                var resolve_case = 0;
+                                int action;
+                                for (var i in snap.data.docs) {
+                                  action = i.data()['action'];
+                                  if (action == 1) {
+                                    live_count++;
+                                  } else if (action == 0) {
+                                    hold_case++;
+                                  } else {
+                                    resolve_case++;
+                                  }
+                                }
+                              
 
-                          ]
+                                return Card(
+                                  color: Colors.black,
+                                
+                                  child: Container(
+                                  
+                                
+                                    color: Colors.cyan[200],
+                                    child: Column(
+                                      children: [
+                                        
+                                        Container(
+                                        
+                                          child: Container(
+                                            
+
+                                            width: widget.width,
+                                            height: 50,
+                                            
+                                             color: Colors.cyan[900],
+                                            child: Center(
+                                              child: Text("Cases Status",
+                                              style: Theme.of(context).textTheme.headline2.merge(TextStyle(fontSize: widget.text_size))
+                                              
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        
+                                        Container(
+                                          padding: EdgeInsets.only(left: 10,
+                                                  top:10),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                children: [
+                                                  Container(
+                                                    
+                                                      child: Text(
+                                                          "Live cases      ",
+                                                            style: Theme.of(context).textTheme.bodyText1.merge(TextStyle(fontSize: widget.text_size)),
+                                                          )),
+                                                  Card(
+                                                  margin: EdgeInsets.only(left: 40,top:10,bottom: 10),
+                                                
+                                                    color: Colors.cyan[900],
+                                                    child: Container(
+    
+                                                      padding: EdgeInsets.symmetric(horizontal:20),
+                                                      child: Text(
+                                                        "$live_count",
+                                                        style: Theme.of(context).textTheme.headline1.merge(TextStyle(fontSize: widget.text_size))
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                               Row(
+                                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Container(
+                                                  child: Text(
+                                                      "Hold cases      ",
+                                                       style: Theme.of(context).textTheme.bodyText1.merge(TextStyle(fontSize: widget.text_size))
+                                                      )),
+                                              Card(
+                                                 margin: EdgeInsets.only(left: 40,top:10,bottom: 10),
+                                                    
+                                                color: Colors.cyan[900],
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 20),
+                                                  child: Text(
+                                                    "$hold_case",
+                                                    style: Theme.of(context).textTheme.headline1.merge(TextStyle(fontSize: widget.text_size)),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Container(
+                                                  child: Text(
+                                                      "Resolved cases",
+                                                        style: Theme.of(context).textTheme.bodyText1.merge(TextStyle(fontSize: widget.text_size))
+                                                      )),
+                                              Card(
+                                                margin: EdgeInsets.only(left: 40,top:10,bottom: 10),
+                                                color: Colors.cyan[900],
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 20),
+                                                  child: Text(
+                                                    "$resolve_case",
+                                                    style: Theme.of(context).textTheme.headline1.merge(TextStyle(fontSize: widget.text_size)),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                            ],
+                                          ),
+                                        ),
+                                       
+                                        
+                                      ],
+                                    ),
+                                  ),
+                                );
+                                }
+                                else{
+                                  return Container(
+                                  
+                                  );
+                                }
+                                
+                              },
+                            )
+                          ]),
+                        ),
+                         SizedBox(
+                          height: 30
+                        ),
+
+                        Card(
+                          color: Colors.cyan[900],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Container(child: 
+                                Text("Live Traffic:",
+                                style: Theme.of(context).textTheme.headline2.merge(TextStyle(fontSize: widget.text_size)),
+                                ),
+                              
+                              padding: EdgeInsets.all(10),),
+                              Card(
+                                color: Colors.cyan[900],
+                                margin: EdgeInsets.all(20),
+                                child: Container(child:  Text(
+
+                                                "$traffic",
+                                                style: Theme.of(context).textTheme.headline1.merge(TextStyle(fontSize: widget.text_size)),
+                                              ),
+                                padding: EdgeInsets.symmetric(
+                                                  horizontal: widget.text_size),
+                                ),
+                              
+                                )
+
+                            ]
+                          )
                         )
-                      )
-                    ],
+                      ],
+                    ),
                   ),
-                )
+                
               ],
             ),
           )
@@ -585,3 +672,4 @@ List<Widget>  page_view(width, text_size){
   ];
 
 }
+
