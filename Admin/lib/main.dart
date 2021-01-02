@@ -27,6 +27,8 @@ class _MyappState extends State<Myapp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
+      debugShowCheckedModeBanner: false,
       
       title: 'Infirmary Web',
       theme: ThemeData(
@@ -50,13 +52,14 @@ class _MyappState extends State<Myapp> {
         // the app on. For desktop platforms, the controls will be smaller and
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        
         fontFamily: "RussoOne-Regular",
         textTheme: TextTheme(
 
-          headline2: TextStyle(fontWeight: FontWeight.normal,color: Colors.teal),
-          headline1: TextStyle(fontWeight: FontWeight.normal,color: Colors.pink),
-          bodyText1: TextStyle(fontWeight: FontWeight.normal,color: Colors.purple),
-          bodyText2: TextStyle(fontWeight: FontWeight.normal,color: Colors.red),
+          headline2: TextStyle(fontWeight: FontWeight.normal,color: Colors.yellow),
+          headline1: TextStyle(fontWeight: FontWeight.normal,color: Colors.yellow[700]),
+          bodyText1: TextStyle(fontWeight: FontWeight.normal,color: Colors.black),
+          bodyText2: TextStyle(fontWeight: FontWeight.normal,color: Colors.blue[900]),
 
 
         )
